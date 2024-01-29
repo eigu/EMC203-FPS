@@ -4,9 +4,15 @@ using UnityEngine.InputSystem;
 public class PlayerCamera : MonoBehaviour
 {
     private InputManager inputManager;
+    
+    private Vector3 playerOrientation;
+    [SerializeField] private Transform cameraHolder;
 
-    [SerializeField] private Vector3 playerOrientation;
-    [SerializeField] private Transform cameraOrientation;
+    [Header("Sensitivity and Smoothing")]
+    [SerializeField, Range(0, 2)] private float sensitivity;
+    [SerializeField, Range(0, 100)] private float smoothing;
+
+    private Vector2 smoothedDelta = Vector2.zero;
 
     private void Start()
     {
@@ -24,16 +30,18 @@ public class PlayerCamera : MonoBehaviour
     {
         Vector3 mouseDelta = inputManager.GetMouseDelta();
 
-        float clampValueX = 180f;
-        playerOrientation.x += mouseDelta.x;
-        playerOrientation.x = Mathf.Repeat(playerOrientation.x + clampValueX, clampValueX * 2f) - clampValueX;
+        mouseDelta *= sensitivity;
 
-        float clampValueY = 50f;
+        smoothedDelta = Vector2.Lerp(smoothedDelta, mouseDelta, 1f / smoothing);
+
+        playerOrientation.x += mouseDelta.x;
         playerOrientation.y -= mouseDelta.y;
-        playerOrientation.y = Mathf.Clamp(playerOrientation.y, -clampValueY, clampValueY);
+
+        playerOrientation.x = Mathf.Repeat(playerOrientation.x + 180f, 360f) - 180f;
+        playerOrientation.y = Mathf.Clamp(playerOrientation.y, -3f, 30f);
 
         //vertical
-        cameraOrientation.rotation = Quaternion.Euler(new Vector3(playerOrientation.y, cameraOrientation.rotation.eulerAngles.y, 0));
+        cameraHolder.rotation = Quaternion.Euler(new Vector3(playerOrientation.y, cameraHolder.rotation.eulerAngles.y, 0));
 
         //horizontal
         transform.rotation = Quaternion.Euler(new Vector3(0, playerOrientation.x, 0));
