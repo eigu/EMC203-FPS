@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,7 +7,7 @@ public class InputManager : MonoBehaviour
 
     PlayerInput playerInput;
 
-    private void Start()
+    private void Awake()
     {
         if (Instance != null && Instance != this) Destroy(this);
         Instance = this;
@@ -24,10 +22,10 @@ public class InputManager : MonoBehaviour
         return playerLook.ReadValue<Vector2>();
     }
 
-    public bool PlayerShootThisFrame()
+    public bool CheckIfPlayerIsShooting()
     {
         InputAction playerShoot = playerInput.actions.FindAction("Shoot");
 
-        return playerShoot.triggered;
+        return playerShoot.IsPressed();
     }
 }

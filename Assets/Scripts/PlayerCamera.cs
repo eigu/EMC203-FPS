@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayerCamera : MonoBehaviour
 {
@@ -7,6 +6,7 @@ public class PlayerCamera : MonoBehaviour
     
     private Vector3 playerOrientation;
     [SerializeField] private Transform cameraHolder;
+    [SerializeField] private Transform playerHand;
 
     [Header("Sensitivity and Smoothing")]
     [SerializeField, Range(0, 2)] private float sensitivity;
@@ -40,11 +40,26 @@ public class PlayerCamera : MonoBehaviour
         playerOrientation.x = Mathf.Repeat(playerOrientation.x + 180f, 360f) - 180f;
         playerOrientation.y = Mathf.Clamp(playerOrientation.y, -30f, 30f);
 
-        //vertical
         cameraHolder.rotation = Quaternion.Euler(new Vector3(playerOrientation.y, cameraHolder.rotation.eulerAngles.y, 0));
 
-        //horizontal
         transform.rotation = Quaternion.Euler(new Vector3(0, playerOrientation.x, 0));
+
+        if (playerHand != null)
+        {
+            playerHand.LookAt(GetCrosshairPoint());
+        }
+    }
+    private Vector3 GetCrosshairPoint()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            return hit.point;
+        }
+
+        return ray.GetPoint(100f);
     }
 
     private void HideCursor()
