@@ -38,7 +38,7 @@ public class PlayerCamera : MonoBehaviour
         playerOrientation.y -= mouseDelta.y;
 
         playerOrientation.x = Mathf.Repeat(playerOrientation.x + 180f, 360f) - 180f;
-        playerOrientation.y = Mathf.Clamp(playerOrientation.y, -3f, 30f);
+        playerOrientation.y = Mathf.Clamp(playerOrientation.y, -30f, 30f);
 
         //vertical
         cameraHolder.rotation = Quaternion.Euler(new Vector3(playerOrientation.y, cameraHolder.rotation.eulerAngles.y, 0));
