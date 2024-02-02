@@ -2,14 +2,22 @@ using UnityEngine;
 
 public class Bullet : Entity
 {
-    [SerializeField] private float speed = 10f;
-    [SerializeField] private float destroyDelay = 2f;
+    private InputManager inputManager;
 
-    private Transform target;
+    [SerializeField] private float speed;
+    [SerializeField] private float destroyDelay;
+
+    private Vector3 target;
+
+    private void Awake()
+    {
+        inputManager = InputManager.Instance;
+    }
 
     private void Start()
     {
-        // Destroy the bullet after a certain delay to avoid cluttering the scene
+        target = inputManager.GetCrosshairPoint();
+
         Destroy(gameObject, destroyDelay);
     }
 
@@ -23,7 +31,7 @@ public class Bullet : Entity
 
     private void MoveTowardsTarget()
     {
-        // Lerp towards the target position
-        transform.position = Vector3.Lerp(transform.position, target.position, Time.deltaTime * speed);
+
+        transform.position = Vector3.Lerp(transform.position, target, Time.deltaTime * speed);
     }
 }
