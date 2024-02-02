@@ -14,7 +14,7 @@ public class PlayerCamera : MonoBehaviour
 
     private Vector2 smoothedDelta = Vector2.zero;
 
-    private void Start()
+    private void Awake()
     {
         inputManager = InputManager.Instance;
 
@@ -46,22 +46,10 @@ public class PlayerCamera : MonoBehaviour
 
         if (playerHand != null)
         {
-            playerHand.LookAt(GetCrosshairPoint());
+            playerHand.LookAt(inputManager.GetCrosshairPoint());
         }
     }
-    private Vector3 GetCrosshairPoint()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit))
-        {
-            return hit.point;
-        }
-
-        return ray.GetPoint(100f);
-    }
-
+    
     private void HideCursor()
     {
         Cursor.lockState = CursorLockMode.Locked;

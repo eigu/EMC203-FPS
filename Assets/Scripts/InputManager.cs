@@ -28,4 +28,11 @@ public class InputManager : MonoBehaviour
 
         return playerShoot.IsPressed();
     }
+
+    public Vector3 GetCrosshairPoint()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+
+        return ray.GetPoint(100f);
+    }
 }
