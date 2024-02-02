@@ -1,32 +1,44 @@
 using UnityEngine;
 
-public class Player: Entity
+public class Player : Entity
 {
     private InputManager inputManager;
 
-    [SerializeField] GameObject bulletPrefab;
-    [SerializeField] Transform bulletSpawn;
+    [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private Transform bulletSpawn;
 
-    private void Start()
+    [SerializeField] float fireRate;
+    private float timeToShoot;
+
+    private void Awake()
     {
         inputManager = InputManager.Instance;
 
+    }
+
+    private void Start()
+    {
         health = 10;
+        timeToShoot = fireRate;
     }
 
     private void Update()
     {
+        timeToShoot -= Time.deltaTime;
+
         Shoot();
-        Debug.Log(inputManager.CheckIfPlayerIsShooting());
     }
 
     private void Shoot()
     {
         bool isPlayerShooting = inputManager.CheckIfPlayerIsShooting();
 
-        if (isPlayerShooting)
+        if (isPlayerShooting
+            && timeToShoot <= 0)
         {
             Instantiate(bulletPrefab, bulletSpawn.position, Quaternion.identity);
+
+            timeToShoot = fireRate;
         }
     }
 }
