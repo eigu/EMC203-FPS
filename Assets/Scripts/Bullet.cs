@@ -4,7 +4,6 @@ public class Bullet : Entity
 {
     private InputManager inputManager;
 
-    [SerializeField] private float speed;
     [SerializeField] private float destroyDelay;
 
     private Vector3 target;
@@ -14,7 +13,7 @@ public class Bullet : Entity
         inputManager = InputManager.Instance;
     }
 
-    private void Start()
+    protected override void Start()
     {
         target = inputManager.GetCrosshairPoint();
 
@@ -23,15 +22,11 @@ public class Bullet : Entity
 
     private void Update()
     {
-        if (target != null)
-        {
-            MoveTowardsTarget();
-        }
+        MoveTowardsTarget();
     }
 
     private void MoveTowardsTarget()
     {
-
         transform.position = Vector3.Lerp(transform.position, target, Time.deltaTime * speed);
     }
 }

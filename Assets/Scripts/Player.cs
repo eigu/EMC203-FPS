@@ -13,10 +13,9 @@ public class Player : Entity
     private void Awake()
     {
         inputManager = InputManager.Instance;
-
     }
 
-    private void Start()
+    protected override void Start()
     {
         health = 10;
         timeToShoot = fireRate;

@@ -2,13 +2,11 @@ using UnityEngine;
 
 public class Enemy : Entity
 {
-    [SerializeField] private float speed = 5f;
-
     private Transform player;
 
-    private void Start()
+    protected override void Start()
     {
-        player = Camera.main.transform;
+        player = GameObject.Find("Player").transform;
     }
 
     private void Update()
@@ -18,7 +16,6 @@ public class Enemy : Entity
 
     private void MoveTowardsPlayer()
     {
-        // Move towards the player's position
         transform.position = Vector3.MoveTowards(transform.position, player.position, Time.deltaTime * speed);
     }
 }
