@@ -8,7 +8,6 @@ public class PlayerCamera : MonoBehaviour
     [SerializeField] private Transform cameraHolder;
     [SerializeField] private Transform playerHand;
 
-    [Header("Sensitivity and Smoothing")]
     [SerializeField, Range(0, 2)] private float sensitivity;
     [SerializeField, Range(0, 100)] private float smoothing;
 
