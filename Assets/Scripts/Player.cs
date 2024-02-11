@@ -1,43 +1,21 @@
-using UnityEngine;
-
 public class Player : Entity
 {
-    private InputManager inputManager;
-
-    [SerializeField] private GameObject bulletPrefab;
-    [SerializeField] private Transform bulletSpawn;
-
-    [SerializeField] float fireRate;
-    private float timeToShoot;
-
-    private void Awake()
-    {
-        inputManager = InputManager.Instance;
-    }
+    public int currentSP;
 
     protected override void Start()
     {
-        health = 10;
-        timeToShoot = fireRate;
+        base.Start();
+
+        currentSP = 0;
     }
 
-    private void Update()
+    protected override void Update()
     {
-        timeToShoot -= Time.deltaTime;
-
-        Shoot();
+        base.Update();
     }
 
-    private void Shoot()
+    public void AddSP(int sp)
     {
-        bool isPlayerShooting = inputManager.CheckIfPlayerIsShooting();
-
-        if (isPlayerShooting
-            && timeToShoot <= 0)
-        {
-            Instantiate(bulletPrefab, bulletSpawn.position, Quaternion.identity);
-
-            timeToShoot = fireRate;
-        }
+        currentSP += sp;
     }
 }

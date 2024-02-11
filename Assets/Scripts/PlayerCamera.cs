@@ -13,11 +13,9 @@ public class PlayerCamera : MonoBehaviour
 
     private Vector2 smoothedDelta = Vector2.zero;
 
-    private void Awake()
+    private void Start()
     {
         inputManager = InputManager.Instance;
-
-        HideCursor();
     }
 
     private void Update()
@@ -47,11 +45,5 @@ public class PlayerCamera : MonoBehaviour
         {
             playerHand.LookAt(inputManager.GetCrosshairPoint());
         }
-    }
-    
-    private void HideCursor()
-    {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
     }
 }

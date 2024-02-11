@@ -9,8 +9,20 @@ public class InputManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null && Instance != this) Destroy(this);
-        Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
+            Destroy(this);
+        }
+
+        DontDestroyOnLoad(this);
+    }
+
+    private void Start()
+    {
 
         playerInput = GetComponent<PlayerInput>();
     }
@@ -27,6 +39,13 @@ public class InputManager : MonoBehaviour
         InputAction playerShoot = playerInput.actions.FindAction("Shoot");
 
         return playerShoot.IsPressed();
+    }
+
+    public bool CheckIfPlayerIsUsingPowerUp()
+    {
+        InputAction playerPowerUp = playerInput.actions.FindAction("PowerUp");
+
+        return playerPowerUp.triggered;
     }
 
     public Vector3 GetCrosshairPoint()

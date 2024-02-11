@@ -10,23 +10,33 @@ public class Bullet : Entity
 
     private void Awake()
     {
-        inputManager = InputManager.Instance;
     }
 
     protected override void Start()
     {
+        base.Start();
+
+        inputManager = InputManager.Instance;
+
         target = inputManager.GetCrosshairPoint();
 
         Destroy(gameObject, destroyDelay);
     }
 
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
+
         MoveTowardsTarget();
     }
 
     private void MoveTowardsTarget()
     {
-        transform.position = Vector3.Lerp(transform.position, target, Time.deltaTime * speed);
+        transform.Translate((target - transform.position).normalized * speed * Time.deltaTime);
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.CompareTag("Ground")) DamageEntity(1);
     }
 }

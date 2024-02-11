@@ -6,12 +6,23 @@ public class Enemy : Entity
 
     protected override void Start()
     {
-        player = GameObject.Find("Player").transform;
+        base.Start();
+
+        player = FindObjectOfType<Player>().transform;
     }
 
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
+
         MoveTowardsPlayer();
+    }
+
+    protected override void DamageEntity(int damage)
+    {
+        base.DamageEntity(damage);
+
+        FindObjectOfType<Player>().AddSP(1);
     }
 
     private void MoveTowardsPlayer()
