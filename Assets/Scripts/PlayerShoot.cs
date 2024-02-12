@@ -22,14 +22,11 @@ public class PlayerShoot : MonoBehaviour
 
     private void Shoot()
     {
-        bool isPlayerShooting = InputManager.Instance.CheckIfPlayerIsShooting();
+        if (!InputManager.Instance.CheckIfPlayerIsShooting()) return;
+        if (timeToShoot > 0) return;
 
-        if (isPlayerShooting
-            && timeToShoot <= 0)
-        {
-            Instantiate(bulletPrefab, bulletSpawn.position, Quaternion.identity);
+        Instantiate(bulletPrefab, bulletSpawn.position, Quaternion.identity);
 
-            timeToShoot = fireRate;
-        }
+        timeToShoot = fireRate;
     }
 }

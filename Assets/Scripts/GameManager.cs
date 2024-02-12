@@ -22,8 +22,6 @@ public class GameManager : MonoBehaviour
         {
             Destroy(this);
         }
-
-        DontDestroyOnLoad(this);
     }
 
     private void Start()

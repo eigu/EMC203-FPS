@@ -27,6 +27,9 @@ public class Enemy : Entity
 
     private void MoveTowardsPlayer()
     {
-        transform.position = Vector3.MoveTowards(transform.position, player.position, Time.deltaTime * speed);
+        if (player != null)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, player.position, Time.deltaTime * speed);
+        }
     }
 }

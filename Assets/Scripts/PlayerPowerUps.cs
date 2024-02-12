@@ -1,61 +1,115 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public enum PowerUps
+public enum PowerUpList
 {
-    Normal,
     AutoAim
+}
+
+[System.Serializable]
+public class PowerUpInfo
+{
+    public PowerUpList type;
+    public GameObject hud;
+    public float duration;
+    public int cost;
 }
 
 public class PlayerPowerUps : MonoBehaviour
 {
-    [SerializeField] private PowerUps powerUp;
+    private Player player;
+
+    [SerializeField] private PowerUpList currentPowerUp;
+    [SerializeField] private List<PowerUpInfo> powerUpInfoList;
+    private PowerUpInfo currentPowerUpInfo;
+    private float powerUpTimer;
+    private bool isUsingPowerUp = false;
+
+    [SerializeField] private float autoAimRadius;
+    public Transform lockedEnemy;
+
+
+    private void Start()
+    {
+        currentPowerUpInfo = powerUpInfoList.Find(info => info.type == currentPowerUp);
+
+        player = FindObjectOfType<Player>();
+    }
 
     private void Update()
     {
-        UsePowerUp(powerUp);
+        powerUpTimer -= Time.deltaTime;
+
+        PowerUp();
     }
 
-    private void UsePowerUp(PowerUps powerUp)
+    private void PowerUp()
     {
-        bool isPlayerUsingPowerUp = InputManager.Instance.CheckIfPlayerIsUsingPowerUp();
+        if (!InputManager.Instance.CheckIfPlayerIsUsingPowerUp()) return;
+        if (isUsingPowerUp) return;
+        if (player.currentSP < currentPowerUpInfo.cost) return;
 
-        int currentSP = FindObjectOfType<Player>().currentSP;
+        player.currentSP -= currentPowerUpInfo.cost;
 
-        if (!isPlayerUsingPowerUp && currentSP < 5) return;
+        ActivatePowerUp(currentPowerUp.ToString());
+    }
 
-        switch (powerUp)
+    private void ActivatePowerUp(string methodName)
+    {
+        isUsingPowerUp = true;
+        currentPowerUpInfo.hud.SetActive(true);
+
+        powerUpTimer = currentPowerUpInfo.duration;
+        StartCoroutine(UsingPowerUp(methodName, currentPowerUpInfo.duration));
+        StartCoroutine(DisablePowerUp(currentPowerUpInfo.duration));
+    }
+
+    private IEnumerator UsingPowerUp(string methodName, float duration)
+    {
+        float timer = duration;
+
+        while (timer > 0)
         {
-            case PowerUps.Normal:
-                break;
-            case PowerUps.AutoAim:
-                //AutoAim();
-                break;
+            Invoke(methodName, 0f);
+            yield return null;
+            timer -= Time.deltaTime;
+        }
+    }
+   
+    private IEnumerator DisablePowerUp(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        isUsingPowerUp = false;
+        currentPowerUpInfo.hud.SetActive(false);
+    }
+
+    private void AutoAim()
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, autoAimRadius);
+        float closestDistance = Mathf.Infinity;
+        Transform closestEnemy = null;
+
+        foreach (Collider collider in colliders)
+        {
+            if (collider.CompareTag("Enemy"))
+            {
+                float distance = Vector3.Distance(transform.position, collider.transform.position);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestEnemy = collider.transform;
+                }
+            }
         }
 
+        if (closestEnemy != null)
+        {
+            lockedEnemy = closestEnemy;
+        }
+        else
+        {
+            lockedEnemy = null;
+        }
     }
-
-    //private void AutoAim()
-    //{
-    //    Vector2 center = new Vector2(400f, 400f);
-
-    //    Enemy[] enemies = FindObjectsOfType<Enemy>();
-
-    //    foreach (Enemy enemy in enemies)
-    //    {
-    //        Vector2 enemyScreenPos = Camera.main.WorldToScreenPoint(enemy.transform.position);
-
-    //        float distanceToCenter = Vector2.Distance(center, enemyScreenPos);
-
-    //        if (distanceToCenter <= 400f)
-    //        {
-    //            AimAndShoot(enemy);
-    //        }
-    //    }
-    //}
-
-    //private void AimAndShoot(Enemy enemy)
-    //{
-    //    // Aim at the enemy and shoot
-    //    // Your aiming and shooting logic goes here
-    //}
 }
