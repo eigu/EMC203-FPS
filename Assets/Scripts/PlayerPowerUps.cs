@@ -62,18 +62,19 @@ public class PlayerPowerUps : MonoBehaviour
 
         powerUpTimer = currentPowerUpInfo.duration;
         StartCoroutine(UsingPowerUp(methodName, currentPowerUpInfo.duration));
-        StartCoroutine(DisablePowerUp(currentPowerUpInfo.duration));
     }
 
     private IEnumerator UsingPowerUp(string methodName, float duration)
     {
-        float timer = duration;
+        StartCoroutine(DisablePowerUp(duration));
 
-        while (timer > 0)
+        float timer = 0f;
+
+        while (timer < duration)
         {
             Invoke(methodName, 0f);
+            timer += Time.deltaTime;
             yield return null;
-            timer -= Time.deltaTime;
         }
     }
    

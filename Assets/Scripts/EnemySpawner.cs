@@ -14,7 +14,7 @@ public class EnemySpawner : MonoBehaviour
     void SpawnEnemy()
     {
         Vector3 randomPosition = Random.insideUnitSphere * spawnRadius;
-        randomPosition.y = 0;
+        randomPosition.y = 1;
 
         Instantiate(enemyPrefab, transform.position + randomPosition, Quaternion.identity);
     }

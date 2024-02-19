@@ -1,5 +1,4 @@
 using UnityEngine;
-using static UnityEditor.FilePathAttribute;
 
 public class PlayerCamera : MonoBehaviour
 {
@@ -28,11 +27,8 @@ public class PlayerCamera : MonoBehaviour
     {
         if (playerPowerUp.lockedEnemy != null)
         {
-            Vector3 direction = playerPowerUp.lockedEnemy.GetComponent<Collider>().bounds.center - transform.position;
-
-            Quaternion rotation = Quaternion.LookRotation(direction);
-
-            transform.rotation = Quaternion.Lerp(transform.rotation, rotation, Time.deltaTime * 10f);
+            transform.LookAt(playerPowerUp.lockedEnemy.transform);
+            cameraHolder.LookAt(playerPowerUp.lockedEnemy.transform);
         }
         else
         {

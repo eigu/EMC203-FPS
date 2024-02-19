@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 
-
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
