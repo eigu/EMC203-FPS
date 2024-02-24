@@ -27,8 +27,17 @@ public class PlayerCamera : MonoBehaviour
     {
         if (playerPowerUp.lockedEnemy != null)
         {
-            transform.LookAt(playerPowerUp.lockedEnemy.transform);
-            cameraHolder.LookAt(playerPowerUp.lockedEnemy.transform);
+            //cameraHolder.LookAt(playerPowerUp.lockedEnemy.transform);
+            //transform.LookAt(playerPowerUp.lockedEnemy.transform);
+
+            var lockedEnemyPosition = playerPowerUp.lockedEnemy.transform.position;
+
+            Vector3 lookDirection = lockedEnemyPosition - cameraHolder.position;
+
+            Quaternion horizontalRotation = Quaternion.LookRotation(new Vector3(lookDirection.x, 0, lookDirection.z));
+
+            cameraHolder.rotation = Quaternion.Euler(-lockedEnemyPosition.y, horizontalRotation.eulerAngles.y, 0);
+            transform.rotation = Quaternion.Euler(0, horizontalRotation.eulerAngles.y, 0);
         }
         else
         {
